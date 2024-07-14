@@ -1,0 +1,47 @@
+version: '3.8'
+services:
+    server_user:
+        build:
+            dockerfile: Dockerfile.dev
+            context: ./server/user
+        volumes:
+            - ./server/user:/app
+        depends_on:
+            - server_user_db
+    auth_db:
+        image: postgres:14-alpine
+        container_name: auth_db
+        ports:
+            - "5432:5432"
+            # host:container
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=password
+            - POSTGRES_DB=auth
+    client_db:
+        image: postgres:14-alpine
+        container_name: client_db
+        ports:
+            - "5433:5432"
+        environment:
+            - POSTGRES_USER=client
+            - POSTGRES_PASSWORD=password
+            - POSTGRES_DB=db_client
+    server_client_db:
+        image: postgres:14-alpine
+        container_name: server_client_db
+        ports:
+            - "5434:5432"
+        environment:
+            - POSTGRES_USER=server_client
+            - POSTGRES_PASSWORD=password
+            - POSTGRES_DB=db_client_server
+    server_user_db:
+        image: postgres:14-alpine
+        container_name: server_user_db
+        ports:
+            - "5435:5432"
+        environment:
+            - POSTGRES_USER=server_user
+            - POSTGRES_PASSWORD=password
+            - POSTGRES_DB=db_user
